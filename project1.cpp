@@ -2,47 +2,47 @@
 #include <fstream>
 using namespace std;
 int col, row;
-int num, objectCol;
-int area[41][20] = { 0 };//çµæœé¡¯ç¤ºçš„ç¯„åœ40x15 çœ‹ä¸åˆ°çš„ç¯„åœ40x4 //å€¼=0 æ²’æ–¹æ ¼ å€¼=1 æœ‰æ–¹æ ¼ å€¼=2 æœ‰æ–¹æ ¼ ä¸”æ­¤æ–¹æ ¼æœƒç§»å‹•
+int objectCol;
+int area[45][20] = { 0 };//­È=0 ¨S¤è®æ ­È=1 ¦³¤è®æ ­È=2 ¦³¤è®æ ¥B¦¹¤è®æ·|²¾°Ê
 string str;
 int index;
 
-bool Is_num_in_Array(int arr[],int num, int size) {//ç”¨ä¾†ç¢ºèªæ•¸å­—æ˜¯å¦åœ¨é™£åˆ—
-	for (int i = 1; i <= size;i++)
-		if (arr[i] == num) 
+bool Is_num_in_Array(int arr[], int num, int size) {//¥Î¨Ó½T»{¼Æ¦r¬O§_¦b°}¦C
+	for (int i = 1; i <= size; i++)
+		if (arr[i] == num)
 			return true;
 	return false;
 }
 
-void output_tetris() {//Debugç”¨ å°‡ç›®å‰çš„æƒ…æ³output
+void output_tetris() {//Debug¥Î ±N¥Ø«eªº±¡ªpoutput
 	for (int i = row + 4; i >= 1; i--) {
 		for (int j = 1; j <= col; j++) {
-			cout << area[i][j];
+			cout << area[i][j]<<" ";
 		}
 		cout << endl;
 	}
 	cout << endl << endl;
 }
 
-void do_terminate_row() {//ç•¶æ–¹å¡Šåœæ­¢è½ä¸‹æ™‚ï¼Œæª¢æŸ¥æ˜¯å¦æœ‰åˆ—å¯ä»¥æ¶ˆé™¤æ–¹å¡Šï¼Œä¸¦ä¸”æ¶ˆé™¤åˆ—ä»¥åŠæ¬å‹•æ–¹å¡Š
-	int row_have_been_changed[5] = {0};
+void do_terminate_row() {//·í¤è¶ô°±¤î¸¨¤U®É¡AÀË¬d¬O§_¦³¦C¥i¥H®ø°£¤è¶ô¡A¨Ã¥B®ø°£¦C¥H¤Î·h°Ê¤è¶ô
+	int row_have_been_changed[5] = { 0 };
 	int pos = 0;
 	int i, j;
-	for (i = 0; i <= 3;i++) {
-		for (j = 1; j <= col;j++) 
+	for (i = 0; i <= 3; i++) {
+		for (j = 1; j <= col; j++)
 			if (area[index + i][j] == 0)
 				break;
 		if (j > col) {
-			row_have_been_changed[++pos]=index + i;
+			row_have_been_changed[++pos] = index + i;
 			for (int k = 1; k <= col; k++)
-				area[index + i][k]=0;
+				area[index + i][k] = 0;
 		}
 	}
-	int first=0 , second=0,row_have_to_move=1;
+	int row_have_to_move = 1;
 	if (pos > 0) {
-		for (i = row_have_been_changed[1]+1; i <= row+4-pos;i++) {
-			for (j = 1; j <= col;j++) {
-				if (Is_num_in_Array(row_have_been_changed,i,4)) {
+		for (i = row_have_been_changed[1] + 1; i <= row + 4 - pos; i++) {
+			for (j = 1; j <= col; j++) {
+				if (Is_num_in_Array(row_have_been_changed, i, 4)) {
 					row_have_to_move++;
 					break;
 				}
@@ -57,9 +57,9 @@ void do_terminate_row() {//ç•¶æ–¹å¡Šåœæ­¢è½ä¸‹æ™‚ï¼Œæª¢æŸ¥æ˜¯å¦æœ‰åˆ—å¯ä»¥æ¶
 		do_terminate_row();
 }
 
-bool If_End_Game() {//ç¢ºèªæ˜¯å¦éŠæˆ²çµæŸï¼Œå¦‚æœæ–¹å¡Šåœæ­¢ä¸”é€²è¡Œdo_terminate_row()ä¹‹å¾Œï¼Œä»æœ‰æ–¹å¡Šåœåœ¨æš«å­˜å€(éŠæˆ²è¦–çª—çœ‹ä¸åˆ°çš„å€åŸŸ)ï¼Œå‰‡åœæ­¢éŠæˆ²
-	for (int i = row+1; i <= row + 4;i++) {
-		for (int j = 1; j <= col;j++) {
+bool If_End_Game() {//½T»{¬O§_¹CÀ¸µ²§ô¡A¦pªG¤è¶ô°±¤î¥B¶i¦ædo_terminate_row()¤§«á¡A¤´¦³¤è¶ô°±¦b¼È¦s°Ï(¹CÀ¸µøµ¡¬İ¤£¨ìªº°Ï°ì)¡A«h°±¤î¹CÀ¸
+	for (int i = row + 1; i <= row + 4; i++) {
+		for (int j = 1; j <= col; j++) {
 			if (area[i][j] == 2 || area[i][j] == 1)
 				return true;
 		}
@@ -67,10 +67,10 @@ bool If_End_Game() {//ç¢ºèªæ˜¯å¦éŠæˆ²çµæŸï¼Œå¦‚æœæ–¹å¡Šåœæ­¢ä¸”é€²è¡Œdo_t
 	return false;
 }
 
-bool check_collision(int row) {//ç¢ºèªæ–¹å¡Šè½ä¸‹æ™‚æœ‰æ²’æœ‰ç¢°åˆ°å…¶ä»–æ–¹å¡Š
+bool check_collision(int row) {//½T»{¤è¶ô¸¨¤U®É¦³¨S¦³¸I¨ì¨ä¥L¤è¶ô
 	if (index == 1)
 		return true;
-	for (int j = index; j <= index + 3;j++) {
+	for (int j = index; j <= index + 3; j++) {
 		for (int i = 1; i <= col; i++) {
 			if (area[j][i] == 2 && area[j - 1][i] == 1)
 				return true;
@@ -81,47 +81,64 @@ bool check_collision(int row) {//ç¢ºèªæ–¹å¡Šè½ä¸‹æ™‚æœ‰æ²’æœ‰ç¢°åˆ°å…¶ä»–æ–¹å¡
 
 
 
-void tetris() {//å¯¦ä½œæ–¹å¡Šè½ä¸‹çš„éç¨‹
+void tetris() {//¹ê§@¤è¶ô¸¨¤Uªº¹Lµ{
 	index = row + 1;
-	if (str == "T1") {
+	if(str=="T1"|| str == "T3" || str == "L2" || str == "L4" || str == "J2" || str == "J4"|| str == "S1"|| str == "Z1"){
+		if (objectCol + 2 > col)
+			cout << "illegal input for objectCol" << endl;
+	}
+
+	else if (str == "T2" || str == "T4" || str == "L1" || str == "L3" || str == "J1" || str == "J3" || str == "S2" || str == "Z2" || str == "O") {
+		if (objectCol + 1 > col)
+			cout << "illegal input for objectCol" << endl;
+	}
+	else if (str == "I1") {
+		if (objectCol > col)
+			cout << "illegal input for objectCol" << endl;
+	}
+	else if (str == "I2") {
+		if (objectCol + 3 > col)
+			cout << "illegal input for objectCol" << endl;
+	}
+	if (str=="T1") {
 		for (int i = 0; i < 3; i++)
-			area[row+2][objectCol + i] = 2;
+			area[row + 2][objectCol + i] = 2;
 		area[row + 1][objectCol + 1] = 2;
 	}
 	else if (str == "T2") {
-		for (int i = 1; i <=3; i++)
-			area[row+i][objectCol+1] = 2;
+ 		for (int i = 1; i <= 3; i++)
+			area[row + i][objectCol + 1] = 2;
 		area[row + 2][objectCol] = 2;
 	}
-	else if (str=="T3") {
-		for(int i=0;i<3;i++)
-			area[row + 1][objectCol+i] = 2;
+	else if (str == "T3") {
+		for (int i = 0; i < 3; i++)
+			area[row + 1][objectCol + i] = 2;
 		area[row + 2][objectCol + 1] = 2;
 	}
 	else if (str == "T4") {
 		for (int i = 1; i <= 3; i++)
-			area[row + i][objectCol ] = 2;
-		area[row + 2][objectCol+1] = 2;
+			area[row + i][objectCol] = 2;
+		area[row + 2][objectCol + 1] = 2;
 	}
 	else if (str == "I3") {
 		for (int i = row + 1; i <= row + 4; i++)
 			area[i][objectCol] = 2;
 	}
 	else if (str == "L1") {
-		for (int i = 1; i <= 3;i++) {
+		for (int i = 1; i <= 3; i++) {
 			area[row + i][objectCol] = 2;
 		}
 		area[row + 1][objectCol + 1] = 2;
 	}
 	else if (str == "L2") {
-		for (int i =0; i <= 2; i++) {
-			area[row + 2][objectCol+i] = 2;
+		for (int i = 0; i <= 2; i++) {
+			area[row + 2][objectCol + i] = 2;
 		}
 		area[row + 1][objectCol] = 2;
 	}
 	else if (str == "L3") {
-		for (int i = row+1; i <= row+3; i++) {
-			area[i][objectCol+1] = 2;
+		for (int i = row + 1; i <= row + 3; i++) {
+			area[i][objectCol + 1] = 2;
 		}
 		area[row + 3][objectCol] = 2;
 	}
@@ -129,7 +146,7 @@ void tetris() {//å¯¦ä½œæ–¹å¡Šè½ä¸‹çš„éç¨‹
 		for (int i = 0; i <= 2; i++) {
 			area[row + 1][objectCol + i] = 2;
 		}
-		area[row + 2][objectCol+2] = 2;
+		area[row + 2][objectCol + 2] = 2;
 	}
 	else if (str == "J1") {
 		for (int i = 1; i <= 3; i++) {
@@ -147,25 +164,25 @@ void tetris() {//å¯¦ä½œæ–¹å¡Šè½ä¸‹çš„éç¨‹
 		for (int i = row + 1; i <= row + 3; i++) {
 			area[i][objectCol] = 2;
 		}
-		area[row + 3][objectCol+1] = 2;
+		area[row + 3][objectCol + 1] = 2;
 	}
 	else if (str == "J4") {
 		for (int i = 0; i <= 2; i++) {
 			area[row + 2][objectCol + i] = 2;
 		}
-		area[row + 1][objectCol+2] = 2;
+		area[row + 1][objectCol + 2] = 2;
 	}
 	else if (str == "S1") {
 		for (int i = 0; i <= 1; i++)
-			area[row + 1][objectCol+i] = 2;
+			area[row + 1][objectCol + i] = 2;
 		for (int i = 1; i <= 2; i++)
-			area[row + 2][objectCol +i] = 2;
+			area[row + 2][objectCol + i] = 2;
 	}
 	else if (str == "S2") {
 		for (int i = 2; i <= 3; i++)
 			area[row + i][objectCol] = 2;
 		for (int i = 1; i <= 2; i++)
-			area[row + i][objectCol+1] = 2;
+			area[row + i][objectCol + 1] = 2;
 	}
 	else if (str == "Z1") {
 		for (int i = 1; i <= 2; i++)
@@ -175,30 +192,34 @@ void tetris() {//å¯¦ä½œæ–¹å¡Šè½ä¸‹çš„éç¨‹
 	}
 	else if (str == "Z2") {
 		for (int i = 2; i <= 3; i++)
-			area[row + i][objectCol+1] = 2;
+			area[row + i][objectCol + 1] = 2;
 		for (int i = 1; i <= 2; i++)
 			area[row + i][objectCol] = 2;
 	}
-	else if(str == "I1") {
+	else if (str == "I1") {
 		for (int i = 1; i <= 4; i++)
 			area[row + i][objectCol] = 2;
 	}
 	else if (str == "I2") {
 		for (int i = 0; i <= 3; i++)
-			area[row + 1][objectCol+i] = 2;
+			area[row + 1][objectCol + i] = 2;
 	}
 	else if (str == "O") {
 		for (int i = 1; i <= 2; i++)
 			for (int j = 0; j <= 1; j++)
-				area[row+i][objectCol + j] = 2;
+				area[row + i][objectCol + j] = 2;
 	}
-	if (objectCol == 5 && str == "I1") 
+	else {
+		cout << str<<"¤è¶ô¥N½X¿ù»~" << endl;
+		return;
+	}
+	if (objectCol == 5 && str == "I1")
 		int a = 0;
 
 	while (true) {
 		//output_tetris();
 		if (check_collision(index)) {
-				break;
+			break;
 		}
 		for (int i = index; i <= index + 3; i++) {
 			for (int j = 1; j <= col; j++) {
@@ -207,7 +228,7 @@ void tetris() {//å¯¦ä½œæ–¹å¡Šè½ä¸‹çš„éç¨‹
 					area[i][j] = 0;
 				}
 				else if (area[i][j] == 0 && area[i - 1][j] == 2)
-					area[i-1][j] = 0;
+					area[i - 1][j] = 0;
 			}
 
 		}
@@ -234,33 +255,32 @@ int main() {
 	outputFile.open("Tetris.output", ios::out);
 	if (!outputFile)
 		cout << "Fail to open 'Tetris.output'" << endl;
-	
+
 
 	inputFile >> row;
 	inputFile >> col;
-	
-	while (1){
+
+	while (1) {
 		inputFile >> str;
 		if (str == "End")
 			break;
 		inputFile >> objectCol;
-		cout << str << " " << objectCol << ":" << endl;//debugç”¨
+		//cout << str << " " << objectCol << ":" << endl;//debug¥Î
 		tetris();
 		do_terminate_row();
-		output_tetris();
+		//output_tetris();
 		if (If_End_Game())
 			break;
 	}
 
 	for (int i = row; i >= 1; i--) {
 		for (int j = 1; j <= col; j++) {
-			cout << area[i][j];
+			cout << area[i][j]<<" ";
 		}
-		cout << endl;
+		cout <<endl;
 	}
-	cout << endl;
 
-	for (int i = row; i >=1;i--) {
+	for (int i = row; i >= 1; i--) {
 		for (int j = 1; j <= col; j++) {
 			outputFile << area[i][j];
 		}
